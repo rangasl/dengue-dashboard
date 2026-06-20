@@ -404,13 +404,16 @@ st.divider()
 # ── What to Do — 3 action cards ───────────────────────────────────────────────
 st.markdown("### 🛡️ What You Should Do")
 a1, a2, a3 = st.columns(3)
-_card = "background:#1a1a2e;border-left:5px solid {c};padding:18px;border-radius:8px;min-height:220px"
+_card_light = ("background:#f0f6ff;color:#1a2a3a;border-left:5px solid {c};"
+               "padding:18px;border-radius:8px;min-height:220px")
+_card_red   = ("background:#fff0f0;color:#1a2a3a;border-left:5px solid #c0392b;"
+               "padding:18px;border-radius:8px;min-height:220px")
 
 with a1:
     st.markdown(
-        f"""<div style='{_card.format(c=_pub_col)}'>
+        f"""<div style='{_card_light.format(c=_pub_col)}'>
         <b style='font-size:15px'>🏠 At Home — Prevent Breeding</b><br><br>
-        ✅ Empty & scrub water containers <b>every week</b><br>
+        ✅ Empty &amp; scrub water containers <b>every week</b><br>
         ✅ Cover all water storage tanks<br>
         ✅ Clear blocked drains and gutters<br>
         ✅ Change water in flower vases daily<br>
@@ -420,7 +423,7 @@ with a1:
 
 with a2:
     st.markdown(
-        f"""<div style='{_card.format(c=_pub_col)}'>
+        f"""<div style='{_card_light.format(c=_pub_col)}'>
         <b style='font-size:15px'>🤧 If You Have Fever</b><br><br>
         ✅ Take <b>Paracetamol</b> — not Aspirin or Brufen<br>
         ✅ Drink fluids constantly (ORS, coconut water)<br>
@@ -432,7 +435,7 @@ with a2:
 
 with a3:
     st.markdown(
-        f"""<div style='{_card.format(c="#c0392b")}'>
+        f"""<div style='{_card_red}'>
         <b style='font-size:15px'>🚨 Go to Hospital If You Have:</b><br><br>
         🔴 Severe stomach pain<br>
         🔴 Vomiting that won't stop<br>
