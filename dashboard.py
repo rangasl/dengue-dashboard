@@ -464,12 +464,14 @@ c4.metric("Last Year Change", f"{last_growth:+.1f}%",
 
 # ── Year-vs-year tracker ───────────────────────────────────────────────────────
 st.markdown("#### 📅 How Is This Year Tracking?")
-_sl_all  = data[data["Country"]=="SRI LANKA"].set_index("Year")["Cases"].sort_index()
+_sl_all  = (data[data["Country"]=="SRI LANKA"]
+            .groupby("Year")["Cases"].sum()
+            .sort_index())
 _ly      = int(_sl_all.index.max())
 _ly_c    = int(_sl_all[_ly])
-_py_c    = int(_sl_all.get(_ly - 1, _sl_all.iloc[-2]))
-_py2_c   = int(_sl_all.get(_ly - 2, _sl_all.iloc[-3]))
-_avg5    = int(_sl_all[_sl_all.index.between(_ly - 5, _ly - 1)].mean())
+_py_c    = int(_sl_all.loc[_ly - 1] if (_ly - 1) in _sl_all.index else _sl_all.iloc[-2])
+_py2_c   = int(_sl_all.loc[_ly - 2] if (_ly - 2) in _sl_all.index else _sl_all.iloc[-3])
+_avg5    = int(_sl_all.loc[_ly - 5 : _ly - 1].mean())
 _vs_avg  = (_ly_c - _avg5) / _avg5 * 100
 _vs_prev = (_ly_c - _py_c)  / _py_c  * 100
 
