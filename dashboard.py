@@ -312,6 +312,139 @@ risk_score, risk_level_str, risk_colour, risk_emoji, risk_factors = compute_risk
 # ── Header KPIs ───────────────────────────────────────────────────────────────
 st.title("🦟 Dengue Fever — Sri Lanka & Regional Trends")
 
+# ══════════════════════════════════════════════════════════════════════════════
+# PUBLIC RISK BANNER + SYMPTOMS
+# ══════════════════════════════════════════════════════════════════════════════
+import datetime
+_month = datetime.date.today().month
+
+_seasonal_level = {
+    1:"LOW",2:"LOW",3:"MODERATE",4:"MODERATE",
+    5:"HIGH",6:"HIGH",7:"HIGH",8:"MODERATE",
+    9:"MODERATE",10:"HIGH",11:"HIGH",12:"MODERATE",
+}[_month]
+
+_season_desc = {
+    "LOW":      "Between monsoon peaks — dengue activity typically low",
+    "MODERATE": "Transitional season — cases starting to rise, stay alert",
+    "HIGH":     "Active monsoon season — peak dengue transmission in Sri Lanka",
+}
+
+# Combine seasonal + climate scores into one public-facing verdict
+if _seasonal_level == "HIGH" and risk_score >= 2:
+    _pub_risk, _pub_col, _pub_emoji = "HIGH",     "#c0392b", "🔴"
+    _pub_msg = ("Peak monsoon season with elevated climate signals. "
+                "Dengue mosquitoes are most active right now. "
+                "Take full precautions and act fast if fever develops.")
+elif _seasonal_level == "HIGH":
+    _pub_risk, _pub_col, _pub_emoji = "ELEVATED", "#e67e22", "🟠"
+    _pub_msg = ("Active monsoon season — Sri Lanka's main dengue period. "
+                "Remove stagnant water around your home and use repellent daily.")
+elif _seasonal_level == "MODERATE" and risk_score >= 3:
+    _pub_risk, _pub_col, _pub_emoji = "ELEVATED", "#e67e22", "🟠"
+    _pub_msg = ("Climate signals suggest a more active than normal year ahead. "
+                "Start precautions now before the monsoon peaks.")
+elif _seasonal_level == "LOW":
+    _pub_risk, _pub_col, _pub_emoji = "LOW",      "#27ae60", "🟢"
+    _pub_msg = ("Lower risk period. Dengue never fully disappears in Sri Lanka "
+                "— maintain routine precautions year-round.")
+else:
+    _pub_risk, _pub_col, _pub_emoji = "MODERATE", "#f39c12", "🟡"
+    _pub_msg = ("Moderate risk. Dengue cases are present throughout the year. "
+                "Stay vigilant, especially after rain.")
+
+ban_col, sym_col = st.columns([1.6, 1])
+
+with ban_col:
+    st.markdown(
+        f"""<div style='background:{_pub_col};color:white;padding:22px 26px;
+        border-radius:12px;margin-bottom:8px'>
+        <div style='font-size:12px;letter-spacing:2px;opacity:0.85;
+        text-transform:uppercase'>🦟 Current Dengue Risk — Sri Lanka</div>
+        <div style='font-size:42px;font-weight:900;margin:8px 0 6px'>
+        {_pub_emoji} {_pub_risk} RISK</div>
+        <div style='font-size:15px;line-height:1.5;opacity:0.95'>{_pub_msg}</div>
+        <div style='margin-top:12px;font-size:12px;opacity:0.75'>
+        Seasonal: <b>{_seasonal_level}</b> — {_season_desc[_seasonal_level]}<br>
+        Climate signal: <b>{risk_level_str}</b> &nbsp;·&nbsp;
+        Updated: <b>{datetime.date.today().strftime("%B %Y")}</b>
+        </div></div>""",
+        unsafe_allow_html=True,
+    )
+    st.caption(
+        "⚠️ Research tool only — not an official health advisory. "
+        "For official alerts: **Epidemiology Unit Sri Lanka** → epid.gov.lk"
+    )
+
+with sym_col:
+    with st.expander("🤒 Know the Symptoms", expanded=True):
+        st.markdown("""
+**Classic dengue (Days 1–3)**
+- Sudden high fever (39–40°C)
+- Severe headache & pain behind the eyes
+- Muscle and joint pain *(breakbone fever)*
+- Nausea, vomiting, loss of appetite
+- Skin rash appearing around Day 3–4
+
+---
+**⚠️ Go to hospital immediately if:**
+- Severe stomach pain or tenderness
+- Persistent vomiting
+- Bleeding gums, nose, or in urine/stool
+- Rapid breathing or cold/clammy skin
+- Sudden calm after a long fever (danger sign)
+
+---
+🚫 **Do NOT take** Aspirin or Ibuprofen — increases bleeding risk.
+✅ **Paracetamol only** for fever.
+        """)
+
+st.divider()
+
+# ── What to Do — 3 action cards ───────────────────────────────────────────────
+st.markdown("### 🛡️ What You Should Do")
+a1, a2, a3 = st.columns(3)
+_card = "background:#1a1a2e;border-left:5px solid {c};padding:18px;border-radius:8px;min-height:220px"
+
+with a1:
+    st.markdown(
+        f"""<div style='{_card.format(c=_pub_col)}'>
+        <b style='font-size:15px'>🏠 At Home — Prevent Breeding</b><br><br>
+        ✅ Empty & scrub water containers <b>every week</b><br>
+        ✅ Cover all water storage tanks<br>
+        ✅ Clear blocked drains and gutters<br>
+        ✅ Change water in flower vases daily<br>
+        ✅ Use mosquito coils or plug-ins at dusk<br>
+        ✅ Sleep under a mosquito net
+        </div>""", unsafe_allow_html=True)
+
+with a2:
+    st.markdown(
+        f"""<div style='{_card.format(c=_pub_col)}'>
+        <b style='font-size:15px'>🤧 If You Have Fever</b><br><br>
+        ✅ Take <b>Paracetamol</b> — not Aspirin or Brufen<br>
+        ✅ Drink fluids constantly (ORS, coconut water)<br>
+        ✅ Rest — stay home from work or school<br>
+        ✅ See a doctor if fever lasts <b>more than 2 days</b><br>
+        ✅ Get a blood test if doctor suspects dengue<br>
+        🚫 Do not self-medicate with antibiotics
+        </div>""", unsafe_allow_html=True)
+
+with a3:
+    st.markdown(
+        f"""<div style='{_card.format(c="#c0392b")}'>
+        <b style='font-size:15px'>🚨 Go to Hospital If You Have:</b><br><br>
+        🔴 Severe stomach pain<br>
+        🔴 Vomiting that won't stop<br>
+        🔴 Bleeding from any site<br>
+        🔴 Fever suddenly drops but you feel <i>worse</i><br>
+        🔴 Difficulty breathing<br>
+        🔴 Extreme fatigue or confusion<br><br>
+        <b>📞 Emergency: 1990 (Suwa Seriya Ambulance)</b>
+        </div>""", unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
+
 sl_sorted   = sl.sort_values("Year")
 total       = int(sl["Cases"].sum())
 peak_yr     = int(sl.loc[sl["Cases"].idxmax(), "Year"]) if not sl.empty else "N/A"
@@ -328,6 +461,50 @@ c2.metric("Peak Year", peak_yr, f"{peak_v:,} cases")
 c3.metric("Avg per Year", f"{avg_yr:,}")
 c4.metric("Last Year Change", f"{last_growth:+.1f}%",
           delta_color="inverse" if last_growth > 0 else "normal")
+
+# ── Year-vs-year tracker ───────────────────────────────────────────────────────
+st.markdown("#### 📅 How Is This Year Tracking?")
+_sl_all  = data[data["Country"]=="SRI LANKA"].set_index("Year")["Cases"].sort_index()
+_ly      = int(_sl_all.index.max())
+_ly_c    = int(_sl_all[_ly])
+_py_c    = int(_sl_all.get(_ly - 1, _sl_all.iloc[-2]))
+_py2_c   = int(_sl_all.get(_ly - 2, _sl_all.iloc[-3]))
+_avg5    = int(_sl_all[_sl_all.index.between(_ly - 5, _ly - 1)].mean())
+_vs_avg  = (_ly_c - _avg5) / _avg5 * 100
+_vs_prev = (_ly_c - _py_c)  / _py_c  * 100
+
+yy1, yy2, yy3, yy4 = st.columns(4)
+yy1.metric(
+    f"Last Full Year ({_ly})",
+    f"{_ly_c:,} cases",
+    f"{_vs_prev:+.1f}% vs {_ly-1}",
+    delta_color="inverse",
+)
+yy2.metric(
+    f"{_ly-1}",
+    f"{_py_c:,} cases",
+    f"{(_py_c-_py2_c)/_py2_c*100:+.1f}% vs {_ly-2}",
+    delta_color="inverse",
+)
+yy3.metric("5-Year Average", f"{_avg5:,} cases")
+yy4.metric(
+    f"{_ly} vs 5-yr average",
+    f"{_vs_avg:+.1f}%",
+    "above average" if _vs_avg > 0 else "below average",
+    delta_color="inverse",
+)
+
+_trend_msg = (
+    f"✅ **{_ly} was a below-average year** ({_ly_c:,} cases vs {_avg5:,} 5-yr avg). "
+    f"Biennial cycle suggests {_ly+1} may rebound."
+    if _vs_avg < -10 else
+    f"⚠️ **{_ly} was above the 5-year average** ({_ly_c:,} vs {_avg5:,}). "
+    f"Watch {_ly+1} closely."
+    if _vs_avg > 20 else
+    f"**{_ly} was near the 5-year average** ({_ly_c:,} cases). "
+    f"Baseline dengue burden remains elevated post-2009."
+)
+st.markdown(_trend_msg)
 
 st.divider()
 
