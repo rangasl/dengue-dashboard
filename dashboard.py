@@ -24,6 +24,27 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+st.markdown("""
+<style>
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #0e1117;
+    color: #6b7280;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 12px;
+    z-index: 9999;
+    border-top: 1px solid #1f2937;
+    pointer-events: none;
+    user-select: none;
+}
+</style>
+<div class="fixed-footer">Experiment by Ranga Dayawansha &nbsp;|&nbsp; Founder of FloodSupport.org</div>
+""", unsafe_allow_html=True)
+
 # ── Colour palette ─────────────────────────────────────────────────────────────
 SL_RED  = "#c0392b"
 BLUE    = "#2980b9"
