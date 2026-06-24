@@ -35,6 +35,7 @@ YELLOW   = "#f1c40f"
 GREEN    = "#27ae60"
 BLUE     = "#2980b9"
 PURPLE   = "#8e44ad"
+GREY     = "#7f8c8d"
 
 SURVEY_CSV = Path("data_sources/vector_surveys.csv")
 SURVEY_CSV.parent.mkdir(exist_ok=True)
@@ -483,4 +484,4 @@ st.caption(
     "Demo data generated for illustration — replace with real NDCU entomological survey data."
 )
 
-GREY = "#7f8c8d"
+
